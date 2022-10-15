@@ -5,9 +5,7 @@ from setuptools import find_packages, setup
 
 
 def parse_requirements(file):
-    with open(
-        os.path.join(os.path.dirname(__file__), file), mode="r", encoding="ascii"
-    ) as req_file:
+    with open(os.path.join(os.path.dirname(__file__), file), mode="r", encoding="ascii") as req_file:
         return [line.strip() for line in req_file if "/" not in line]
 
 
