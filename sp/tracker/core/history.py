@@ -1,17 +1,12 @@
 import os
 import shutil
-from typing import Generic, TypeVar
 
 import pandas as pd
 
-from sp.tracker.class_model import DataBaseGenericModel
-
-HistoryDataTypeColumns = TypeVar("HistoryDataTypeColumns")
+from sp.tracker.core.class_model import DataBaseModel
 
 
-class CsvFile(DataBaseGenericModel, Generic[HistoryDataTypeColumns]):
-    columns: HistoryDataTypeColumns
-
+class CsvFile(DataBaseModel):
     def exists(self) -> bool:
         return self.path.exists() and self.path.is_file()
 
@@ -29,23 +24,17 @@ class CsvFile(DataBaseGenericModel, Generic[HistoryDataTypeColumns]):
 
         data = pd.read_csv(self.path)
 
-        # narrow the columns to ones in HistoryDataTypeColumns
-        # and perform validation
-
-        return data
+        return data.query("Action in @self.actions").copy()[self.columns]
 
     def write(self, data: pd.DataFrame) -> None:
         root, _ = os.path.split(self.path)
         if not os.path.exists(root):
             os.makedirs(root, exist_ok=True)
 
-        # narrow the columns to ones in HistoryDataTypeColumns
-        # and perform validation
-
         data.to_csv(self.path, index=False)
 
 
-class History(DataBaseGenericModel, Generic[HistoryDataTypeColumns]):
+class History(DataBaseModel):
     def exists(self) -> bool:
         return self.path.exists() and self.path.is_dir() and len(list(self.path.iterdir())) > 0
 
@@ -65,13 +54,10 @@ class History(DataBaseGenericModel, Generic[HistoryDataTypeColumns]):
         history_data_list = []
 
         for csv_path in self.path.iterdir():
-            csv_item = CsvFile[HistoryDataTypeColumns](path=csv_path)
+            csv_item = CsvFile(path=csv_path, _columns=self.columns, _actions=self.actions)
             data = csv_item.read()
             history_data_list.append(data)
 
         history_data = pd.concat(history_data_list, ignore_index=True)
 
         return history_data
-
-    def write(self, data: pd.DataFrame) -> None:
-        raise NotImplementedError
