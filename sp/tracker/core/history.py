@@ -8,11 +8,11 @@ class CsvFile(DataBaseModel):
         return self.path.exists() and self.path.is_file()
 
     def read(self) -> pd.DataFrame:
+
         if not self.exists():
-            raise ValueError(f"CSV partial history at path: {self.path} doesn't exist.")
+            raise ValueError(f"Data at path: {self.path} doesn't exist.")
 
         data = pd.read_csv(self.path)
-
         return data.query("Action in @self.actions").copy()[self.columns]
 
 
@@ -23,7 +23,7 @@ class History(DataBaseModel):
     def read(self) -> pd.DataFrame:
 
         if not self.exists():
-            raise ValueError(f"History at path: {self.path} doesn't exist.")
+            raise ValueError(f"Data at path: {self.path} doesn't exist.")
 
         history_data_list = []
 

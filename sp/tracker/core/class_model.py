@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List
+from typing import Any, List
 
 from pydantic import BaseModel as PydanticBaseModel
 from pydantic import Extra
@@ -31,3 +31,9 @@ class DataBaseModel(BaseModel):
             raise ValueError("Property '_actions' must be set by concrete class implementations.")
 
         return self._actions
+
+    def exists(self) -> bool:
+        raise NotImplementedError
+
+    def read(self) -> Any:
+        raise NotImplementedError
