@@ -1,0 +1,6 @@
+mypy
+black
+plotly
+pandas
+flask
+pydantic
