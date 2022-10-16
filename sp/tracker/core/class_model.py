@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, List
+from typing import Any, Iterable
 
 from pydantic import BaseModel as PydanticBaseModel
 from pydantic import Extra
@@ -15,25 +15,25 @@ class BaseModel(PydanticBaseModel):
 
 class DataBaseModel(BaseModel):
     path: Path
-    _columns: List[str] | None = None
-    _actions: List[str] | None = None
+    _columns: Iterable[str] | None = None
+    _actions: Iterable[str] | None = None
 
     @property
-    def columns(self) -> List[str]:
+    def columns(self) -> Iterable[str]:
         if self._columns is None:
-            raise ValueError("Property '_columns' must be set by concrete class implementations.")
+            raise AttributeError("Property '_columns' must be set by concrete class implementations.")
 
         return list(set(self._columns) | {"Action"})
 
     @property
-    def actions(self) -> List[str]:
+    def actions(self) -> Iterable[str]:
         if self._actions is None:
-            raise ValueError("Property '_actions' must be set by concrete class implementations.")
+            raise AttributeError("Property '_actions' must be set by concrete class implementations.")
 
         return self._actions
 
     def exists(self) -> bool:
-        raise NotImplementedError
+        ...  # pragma: no cover
 
     def read(self) -> Any:
-        raise NotImplementedError
+        ...  # pragma: no cover
