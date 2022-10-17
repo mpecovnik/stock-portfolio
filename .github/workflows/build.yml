@@ -39,7 +39,7 @@ jobs:
         pylint ./sp
     - name: Lint with mypy
       run: |
-        - mypy --config-file ./pyproject.toml ./sp
+        mypy --config-file ./pyproject.toml ./sp
     - name: Test with pytest
       run: |
         pytest test -vv
