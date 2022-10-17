@@ -2,6 +2,8 @@
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
 
 name: stock-portfolio
+env:
+  MINIMUM_TEST_COVERAGE: 95
 
 on:
   push:
@@ -41,7 +43,7 @@ jobs:
         mypy --config-file ./pyproject.toml ./sp
     - name: Test with pytest
       run: |
-        pytest test -vv --cov --cov-report=term --cov-report=xml
+        pytest test -vv --cov --cov-report=term --cov-report=xml --cov-fail-under=$MINIMUM_TEST_COVERAGE
 
     - name: Upload code coverage
       uses: codecov/codecov-action@v2
