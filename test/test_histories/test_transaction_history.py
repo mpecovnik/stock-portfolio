@@ -1,7 +1,6 @@
 from pathlib import Path
 
-from testing.env import TEST_DATA_ROOT
-
+from sp.testing.env import TEST_DATA_ROOT
 from sp.tracker.histories.transaction_history import TransactionHistory
 
 

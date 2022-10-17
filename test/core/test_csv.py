@@ -2,8 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from testing.env import TEST_DATA_ROOT
-
+from sp.testing.env import TEST_DATA_ROOT
 from sp.tracker.core.history import CsvFile
 
 
