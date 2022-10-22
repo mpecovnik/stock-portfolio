@@ -1,8 +1,8 @@
 import pandas as pd
 
-from .class_model import DataBaseModel
-from .data import CsvFile
-from .decorators import check_existence
+from sp.tracker.core.class_model import DataBaseModel
+from sp.tracker.core.decorators import check_existence
+from sp.tracker.data.csv import CsvFile
 
 
 class History(DataBaseModel):

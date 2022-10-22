@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from sp.testing.env import TEST_DATA_ROOT
-from sp.tracker.core.history import PositionHistory
+from sp.tracker.data.history import PositionHistory
 
 
 def test_position_history() -> None:

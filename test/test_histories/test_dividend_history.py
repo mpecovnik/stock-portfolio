@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from sp.testing.env import TEST_DATA_ROOT
-from sp.tracker.core.history import DividendHistory
+from sp.tracker.data.history import DividendHistory
 
 
 def test_dividend_history() -> None:

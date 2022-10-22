@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from sp.testing.env import TEST_DATA_ROOT
-from sp.tracker.core.history import TransactionHistory
+from sp.tracker.data.history import TransactionHistory
 
 
 def test_transaction_history() -> None:
