@@ -52,7 +52,7 @@ class FifoPositionReport(ReportBaseModel):
         currencies = ticker_position_history["Currency (Price / share)"].unique()
 
         if len(currencies) != 1:
-            raise ValueError
+            raise ValueError  # pragma: no cover
 
         currency = currencies[0]
 
@@ -91,12 +91,6 @@ class FifoPositionReport(ReportBaseModel):
         }
 
         while not (sell_queue.empty() and sell_action is None):
-
-            if buy_action is not None and buy_action.num_shares < PRECISION_GUARD:
-                buy_action = None
-
-            if sell_action is not None and sell_action.num_shares < PRECISION_GUARD:
-                sell_action = None
 
             buy_action = buy_queue.get() if not buy_action else buy_action
             sell_action = sell_queue.get() if not sell_action else sell_action
