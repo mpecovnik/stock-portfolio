@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 
 from sp.testing.env import TEST_DATA_ROOT
-from sp.tracker.core.history import CsvFile
+from sp.tracker.core.data import CsvFile
 
 
 @pytest.mark.parametrize(
