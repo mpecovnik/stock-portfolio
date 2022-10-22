@@ -10,13 +10,13 @@ class History(DataBaseModel):
         return self.path.exists() and self.path.is_dir() and len(list(self.path.iterdir())) > 0
 
     @check_existence
-    def read(self) -> pd.DataFrame:
+    def read(self, query: str | None) -> pd.DataFrame:
 
         history_data = []
 
         for csv_path in self.path.iterdir():
-            csv_item = CsvFile(path=csv_path, _columns=self.columns, _actions=self.actions)
-            history_data.append(csv_item.read())
+            csv_data = CsvFile(path=csv_path, _columns=self.columns, _actions=self.actions).read(query=query)
+            history_data.append(csv_data)
 
         return pd.concat(history_data, ignore_index=True)
 
@@ -33,9 +33,9 @@ class DividendHistory(History):
         "Ticker",
         "Name",
         "No. of shares",
-        "Price / Share",
+        "Price / share",
         "Total (EUR)",
-        "Witholding tax",
+        "Withholding tax",
     ]
     _actions = ["Dividend (Ordinary)"]
 
@@ -47,8 +47,8 @@ class PositionHistory(History):
         "Ticker",
         "Name",
         "No. of shares",
-        "Currency (Price / Share)",
-        "Price / Share",
+        "Currency (Price / share)",
+        "Price / share",
         "Total (EUR)",
     ]
     _actions = ["Market buy", "Market sell"]

@@ -14,8 +14,8 @@ def test_position_history() -> None:
             "Ticker",
             "Name",
             "No. of shares",
-            "Currency (Price / Share)",
-            "Price / Share",
+            "Currency (Price / share)",
+            "Price / share",
             "Total (EUR)",
             "Action",
         ]

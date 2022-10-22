@@ -20,7 +20,7 @@ def test_read(input_path: Path) -> None:
     read_columns = set(["Time", "ISIN", "Price / share"])
     read_actions = set(["Market buy"])
 
-    data = History(path=input_path, _columns=read_columns, _actions=read_actions).read()
+    data = History(path=input_path, _columns=read_columns, _actions=read_actions).read(query=None)
 
     assert set(data.columns) == read_columns | {"Action"}
     assert set(data["Action"].values) == read_actions
@@ -33,7 +33,7 @@ def test_read_exception(input_path: Path) -> None:
     read_columns = set(["ISIN", "Price / share"])
     read_actions = set(["Market buy"])
 
-    csv = History(path=input_path, _columns=read_columns, _actions=read_actions)
+    hist = History(path=input_path, _columns=read_columns, _actions=read_actions)
 
     with pytest.raises(ValueError):
-        _ = csv.read()
+        _ = hist.read(query=None)

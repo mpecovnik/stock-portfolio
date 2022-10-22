@@ -9,6 +9,10 @@ class CsvFile(DataBaseModel):
         return self.path.exists() and self.path.is_file()
 
     @check_existence
-    def read(self) -> pd.DataFrame:
+    def read(self, query: str | None) -> pd.DataFrame:
         data = pd.read_csv(self.path)
+
+        if query is not None:
+            data = data.query(query).copy()
+
         return data.query("Action in @self.actions")[self.columns].copy()
