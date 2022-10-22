@@ -24,3 +24,31 @@ class History(DataBaseModel):
 class TransactionHistory(History):
     _columns = ["Time", "Total (EUR)"]
     _actions = ["Deposit", "Withdraw"]
+
+
+class DividendHistory(History):
+    _columns = [
+        "Time",
+        "ISIN",
+        "Ticker",
+        "Name",
+        "No. of shares",
+        "Price / Share",
+        "Total (EUR)",
+        "Witholding tax",
+    ]
+    _actions = ["Dividend (Ordinary)"]
+
+
+class PositionHistory(History):
+    _columns = [
+        "Time",
+        "ISIN",
+        "Ticker",
+        "Name",
+        "No. of shares",
+        "Currency (Price / Share)",
+        "Price / Share",
+        "Total (EUR)",
+    ]
+    _actions = ["Market buy", "Market sell"]
