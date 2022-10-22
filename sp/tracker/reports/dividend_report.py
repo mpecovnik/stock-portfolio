@@ -11,6 +11,6 @@ class DividendReport(ReportBaseModel):
         ...  # pragma: no cover
 
     def create_report_by_ticker(self, ticker: str) -> pd.DataFrame:
-        ticker_dividend_history = self.dividend_history.read(query=f"Ticker == '{ticker}'")
+        ticker_dividend_history = self.dividend_history.read(f"Ticker == '{ticker}'")
 
         return ticker_dividend_history

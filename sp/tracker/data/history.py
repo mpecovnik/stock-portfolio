@@ -15,7 +15,7 @@ class History(DataBaseModel):
         history_data = []
 
         for csv_path in self.path.iterdir():
-            csv_data = CsvFile(path=csv_path, _columns=self.columns, _actions=self.actions).read(query=query)
+            csv_data = CsvFile(path=csv_path, _columns=self.columns, _actions=self.actions).read(query)
             history_data.append(csv_data)
 
         return pd.concat(history_data, ignore_index=True)
