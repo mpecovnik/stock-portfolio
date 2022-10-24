@@ -82,11 +82,10 @@ class FifoPositionReport(ReportBaseModel):
         buy_action = None
 
         actions_dict: Dict[str, List[str | float]] = {
+            "NUM_SHARES": [],
             "BUY_DATE": [],
-            "NUM_BOUGHT_SHARES": [],
             "BUY_PRICE_PER_SHARE": [],
             "SELL_DATE": [],
-            "NUM_SOLD_SHARES": [],
             "SELL_PRICE_PER_SHARE": [],
         }
 
@@ -116,15 +115,18 @@ class FifoPositionReport(ReportBaseModel):
 
             current_buy, current_sell = action_tuple
 
-            actions_dict["BUY_DATE"].append(current_buy.time)
-            actions_dict["NUM_BOUGHT_SHARES"].append(current_buy.num_shares)
-            actions_dict["BUY_PRICE_PER_SHARE"].append(current_buy.price)
+            actions_dict["NUM_SHARES"].append(current_sell.num_shares)
 
+            actions_dict["BUY_DATE"].append(current_buy.time)
+            actions_dict["BUY_PRICE_PER_SHARE"].append(current_buy.price)
             actions_dict["SELL_DATE"].append(current_sell.time)
-            actions_dict["NUM_SOLD_SHARES"].append(current_sell.num_shares)
             actions_dict["SELL_PRICE_PER_SHARE"].append(current_sell.price)
 
         report_df = pd.DataFrame(actions_dict)
         report_df.loc[:, ["TICKER", "NAME", "ISIN", "CURRENCY"]] = ticker, name, isin, currency
+        report_df.loc[:, "TAX_YEAR"] = report_df.SELL_DATE.astype("datetime64[ns]").apply(lambda x: x.year).values
+        report_df.loc[:, "RESULT"] = report_df.loc[:, "NUM_SHARES"] * (
+            report_df.loc[:, "SELL_PRICE_PER_SHARE"] - report_df.loc[:, "BUY_PRICE_PER_SHARE"]
+        )
 
         return report_df

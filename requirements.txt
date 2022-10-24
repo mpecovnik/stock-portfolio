@@ -2,9 +2,10 @@ mypy
 black
 isort
 pylint
-plotly
 pandas
 flask
 pydantic
 toml
 rapidjson
+panel
+hvplot
