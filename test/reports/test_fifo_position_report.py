@@ -25,7 +25,6 @@ def test_fifo_report_single_ticker(ticker: str) -> None:
     assert not report_df.empty
     assert set(report_df["TICKER"].values) == {ticker}
     assert (
-        input_history_df.query("Action == 'Market sell'")["No. of shares"].sum() - report_df["NUM_SOLD_SHARES"].sum()
+        input_history_df.query("Action == 'Market sell'")["No. of shares"].sum() - report_df["NUM_SHARES"].sum()
         < PRECISION_GUARD
     )
-    assert report_df["NUM_SOLD_SHARES"].sum() - report_df["NUM_BOUGHT_SHARES"].sum() < PRECISION_GUARD
