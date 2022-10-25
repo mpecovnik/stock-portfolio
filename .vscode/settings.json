@@ -6,6 +6,8 @@
         "--ignore-missing-imports",
         "--follow-imports=silent",
         "--show-column-numbers",
+        "--allow-untyped-calls",
+        "--allow-untyped-decorators",
         "--strict"
     ],
     "python.testing.pytestArgs": [

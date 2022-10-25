@@ -1,7 +1,10 @@
 from queue import Queue
 from typing import Dict, List, TypeVar
 
+import numpy as np
 import pandas as pd
+import panel as pn
+import param
 
 from sp.testing.env import PRECISION_GUARD
 from sp.tracker.core.class_model import BaseModel, ReportBaseModel
@@ -130,3 +133,86 @@ class FifoPositionReport(ReportBaseModel):
         )
 
         return report_df
+
+
+class FifoPositionDashboard(BaseModel):
+    fifo_position_report: FifoPositionReport
+
+    def serve_dashboard(self) -> param.Parameterized:
+
+        report_df = self.fifo_position_report.create_report()
+
+        tickers = self.fifo_position_report.tickers
+
+        if tickers is None:
+            raise ValueError(
+                "Please provide tickers to the input 'FifoPositionReport' to render the dashboard!"
+            )  # pragma: no cover
+
+        tickers = sorted(tickers)
+        ticker_selector = pn.widgets.Select(name="Ticker Selector", options=tickers, value="")
+        tax_year_selector = pn.widgets.Select(name="Tax Year selector", options=[])
+
+        @pn.depends(ticker=ticker_selector.param.value, year=tax_year_selector.param.value)
+        def introduction_markdown(ticker: str | None = None, year: int | None = None) -> pn.pane.Markdown:
+            if ticker is None:
+                message = "# Please choose a ticker to display it's tax report."
+            else:
+                possible_years = list(report_df.query(f"TICKER == '{ticker}'").TAX_YEAR.unique())
+
+                if year is None:
+                    if len(possible_years) > 0:
+                        message = (
+                            f"# Report for {ticker}\n\nPlease also choose a tax year from the list of available ones on"
+                            " the left."
+                        )
+                    else:
+                        message = f"# Report for {ticker}\n\nNo taxable events detected in the provided history."
+
+                else:
+                    message = f"# Report for {ticker} for {year}"
+            return pn.pane.Markdown(message, width=1800)
+
+        def update_tax_year_options(event: param.parameterized.Event) -> None:
+            available_tax_years = list(report_df.query(f"TICKER == '{event.new}'").TAX_YEAR.unique())
+            tax_year_selector.options = available_tax_years
+
+        ticker_selector.param.watch(update_tax_year_options, "value")
+
+        @pn.depends(ticker=ticker_selector.param.value, year=tax_year_selector.param.value)
+        def ticker_table_for_tax_year(ticker: str | None = None, year: int | None = None) -> pn.pane.DataFrame:
+            if ticker is None or year is None:
+                return pn.pane.DataFrame()
+            return pn.pane.DataFrame(report_df.query(f"TICKER == '{ticker}' and TAX_YEAR == {year}"), width=1800)
+
+        @pn.depends(ticker=ticker_selector.param.value, year=tax_year_selector.param.value)
+        def ticker_result_summary_for_tax_year(ticker: str | None = None, year: int | None = None) -> pn.pane.Markdown:
+
+            if ticker is None or year is None:
+                return pn.pane.Markdown(
+                    "### Please select a ticker and tax year in the options on the right.", width=1800
+                )
+
+            df = report_df.query(f"TICKER == '{ticker}' and TAX_YEAR == {year}")
+
+            num_shares = df.NUM_SHARES.sum()
+            currency = df.CURRENCY.unique()[0]
+            avg_buy = np.round(df.BUY_PRICE_PER_SHARE.mean(), 2)
+            avg_sell = np.round(df.SELL_PRICE_PER_SHARE.mean(), 2)
+            result = np.round(df.RESULT.sum(), 2)
+
+            summary = (
+                f"For ticker {ticker} and tax year {year}, a total of {num_shares} shares were sold.\n\nThe average"
+                " prices are:"
+            )
+            summary += f"\n\n- buy price: {avg_buy} {currency},\n\n- sell price: {avg_sell} {currency}.\n\n"
+            summary += f"The overall result is a {'profit' if result >= 0 else 'loss'} of {result} {currency}."
+
+            return pn.pane.Markdown(summary, width=1800)
+
+        return pn.template.FastListTemplate(
+            site="Panel",
+            title="FIFO report",
+            sidebar=[ticker_selector, tax_year_selector],
+            main=[introduction_markdown, ticker_table_for_tax_year, ticker_result_summary_for_tax_year],
+        ).servable()

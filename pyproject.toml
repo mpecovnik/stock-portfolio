@@ -49,6 +49,8 @@ ignore-imports="yes"
 show_column_numbers = true
 ignore_missing_imports = true
 allow_redefinition = true
+allow_untyped_calls = true
+disallow_untyped_decorators = true
 
 [tool.pytest.ini_options]
 testpaths = ["test"]
