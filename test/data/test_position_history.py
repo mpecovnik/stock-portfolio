@@ -1,11 +1,11 @@
 from pathlib import Path
 
-from sp.testing.env import TEST_DATA_ROOT
+from sp.testing.env import HISTORY_DATA_ROOT
 from sp.tracker.data.history import PositionHistory
 
 
 def test_position_history() -> None:
-    trans_history = PositionHistory(path=Path(TEST_DATA_ROOT))
+    trans_history = PositionHistory(path=Path(HISTORY_DATA_ROOT))
 
     assert set(trans_history.columns) == set(
         [

@@ -1,14 +1,18 @@
 from queue import Queue
-from typing import Dict, List, TypeVar
+from typing import Dict, List, Optional, TypeVar
 
 import numpy as np
 import pandas as pd
 import panel as pn
 import param
+from bokeh.models import ColumnDataSource, HoverTool
+from bokeh.models.formatters import PrintfTickFormatter
+from bokeh.plotting import Figure, figure
 
 from sp.testing.env import PRECISION_GUARD
-from sp.tracker.core.class_model import BaseModel, ReportBaseModel
+from sp.tracker.core.class_model import BaseModel
 from sp.tracker.data.history import PositionHistory
+from sp.tracker.reports.model import ReportBaseModel
 
 A = TypeVar("A", bound="Action")
 
@@ -35,13 +39,13 @@ class SellAction(Action):
 
 
 class FifoPositionReport(ReportBaseModel):
-    position_history: PositionHistory
+    history: PositionHistory
 
     def create_report_in_full(self) -> pd.DataFrame:
         ...  # pragma: no cover
 
     def create_report_by_ticker(self, ticker: str) -> pd.DataFrame:
-        ticker_position_history = self.position_history.read(f"Ticker == '{ticker}'").sort_values("Time")
+        ticker_position_history = self.history.read(f"Ticker == '{ticker}'").sort_values("Time")
 
         if "Market sell" not in ticker_position_history["Action"].unique():
             return pd.DataFrame()
@@ -137,82 +141,172 @@ class FifoPositionReport(ReportBaseModel):
 
 class FifoPositionDashboard(BaseModel):
     fifo_position_report: FifoPositionReport
+    display_width: int = 1800
+
+    def plot(self, year: int, report_df: Optional[pd.DataFrame] = None) -> Figure:
+
+        if report_df is None:
+            report_df = self.fifo_position_report.create_report()
+
+        ticker_name_map = report_df[["TICKER", "NAME"]].drop_duplicates()
+
+        results = report_df.query(f"TAX_YEAR == {year}").groupby("TICKER", as_index=False)["RESULT"].sum()
+        results_with_names = pd.merge(results, ticker_name_map, on="TICKER", how="left")
+        results_with_names = results_with_names.set_index("TICKER")
+        results_with_names.loc[:, "COLOR"] = np.where(results_with_names.loc[:, "RESULT"] >= 0, "green", "red")
+        results_with_names = results_with_names.sort_values("RESULT")
+
+        results_with_names["running_total"] = results_with_names["RESULT"].cumsum()
+        results_with_names["y_start"] = results_with_names["running_total"] - results_with_names["RESULT"]
+
+        results_with_names["label_pos"] = results_with_names["y_start"].copy()
+        results_with_names["bar_label"] = results_with_names["RESULT"].map("{:,.0f}".format)
+
+        total_result = results_with_names.RESULT.sum()
+        results_with_names.loc["Total", ["RESULT", "NAME", "COLOR", "y_start", "running_total"]] = (
+            total_result,
+            "Total",
+            "green" if total_result > 0 else "red",
+            0,
+            total_result,
+        )
+        results_with_names = results_with_names.reset_index()
+
+        plot_width = self.display_width
+        padding_perc = 25
+        column_width = (plot_width / len(results_with_names)) / (1 + padding_perc / 100)
+
+        TOOLS = "box_zoom,reset,save"
+
+        hover = HoverTool(
+            tooltips=[
+                ("ticker", "@TICKER"),
+                ("name", "@NAME"),
+                ("result", "@RESULT{%0.2f €}"),
+            ],
+            formatters={
+                "@RESULT": "printf",
+            },
+            mode="vline",
+        )
+
+        source = ColumnDataSource(results_with_names)
+        p = figure(
+            tools=TOOLS,
+            x_range=list(results_with_names.TICKER),
+            y_range=(results_with_names.running_total.min() * 1.1, results_with_names.running_total.max() * 1.1),
+            plot_width=plot_width,
+            title="Tax report per ticker for year 2020",
+        )
+        p.add_tools(hover)
+
+        p.segment(
+            x0="TICKER",
+            y0="y_start",
+            x1="TICKER",
+            y1="running_total",
+            source=source,
+            color="COLOR",
+            line_width=column_width,
+        )
+
+        p.grid.grid_line_alpha = 0.3
+        p.yaxis[0].formatter = PrintfTickFormatter(format="%0.2f €")
+        p.xaxis.axis_label = "Tickers"
+        p.yaxis.axis_label = "Result"
+        p.xaxis.major_label_orientation = "vertical"
+
+        return p
 
     def serve_dashboard(self) -> param.Parameterized:
 
         report_df = self.fifo_position_report.create_report()
 
-        tickers = self.fifo_position_report.tickers
-
-        if tickers is None:
+        year_options = self.fifo_position_report.years
+        if year_options is None:
             raise ValueError(
-                "Please provide tickers to the input 'FifoPositionReport' to render the dashboard!"
+                "Please provide 'year_options' to the input 'FifoPositionReport' to render the dashboard!"
             )  # pragma: no cover
 
-        tickers = sorted(tickers)
-        ticker_selector = pn.widgets.Select(name="Ticker Selector", options=tickers, value="")
-        tax_year_selector = pn.widgets.Select(name="Tax Year selector", options=[])
+        tax_year_selector = pn.widgets.Select(name="Tax Year selector", options=year_options)
+        available_tickers = list(report_df.query(f"TAX_YEAR == {tax_year_selector.value}").TICKER.unique())
+        ticker_selector = pn.widgets.Select(name="Ticker Selector", options=available_tickers)
+
+        @pn.depends(year=tax_year_selector.param.value)
+        def year_report_image(year: int | None = None) -> pn.pane.Bokeh | pn.pane.Markdown | None:
+
+            if year is None:
+                return None
+
+            if report_df.query(f"TAX_YEAR == {year}").empty:
+                return pn.pane.Markdown(
+                    "### Nothing to display, since to taxable events occured.", width=self.display_width
+                )
+
+            return pn.pane.Bokeh(self.plot(year=year, report_df=report_df), width=self.display_width)
 
         @pn.depends(ticker=ticker_selector.param.value, year=tax_year_selector.param.value)
         def introduction_markdown(ticker: str | None = None, year: int | None = None) -> pn.pane.Markdown:
-            if ticker is None:
-                message = "# Please choose a ticker to display it's tax report."
+
+            if year is None:
+                if report_df.TAX_YEAR.nunique() > 0:
+                    message = "# Please choose a year to display the available tickers."
             else:
-                possible_years = list(report_df.query(f"TICKER == '{ticker}'").TAX_YEAR.unique())
-
-                if year is None:
-                    if len(possible_years) > 0:
-                        message = (
-                            f"# Report for {ticker}\n\nPlease also choose a tax year from the list of available ones on"
-                            " the left."
-                        )
-                    else:
-                        message = f"# Report for {ticker}\n\nNo taxable events detected in the provided history."
-
+                if ticker is None:
+                    message = "# Please choose a ticker to display it's tax report."
                 else:
-                    message = f"# Report for {ticker} for {year}"
-            return pn.pane.Markdown(message, width=1800)
+                    name = report_df.query(f"TICKER == '{ticker}'").NAME.unique()[0]
+                    message = f"# Report for {name} ({ticker}) for {year}"
+            return pn.pane.Markdown(message, width=self.display_width)
 
-        def update_tax_year_options(event: param.parameterized.Event) -> None:
-            available_tax_years = list(report_df.query(f"TICKER == '{event.new}'").TAX_YEAR.unique())
-            tax_year_selector.options = available_tax_years
+        def update_ticker_options(event: param.parameterized.Event) -> None:
+            available_tickers = list(report_df.query(f"TAX_YEAR == {event.new}").TICKER.unique())
+            ticker_selector.options = available_tickers
 
-        ticker_selector.param.watch(update_tax_year_options, "value")
+        tax_year_selector.param.watch(update_ticker_options, "value")
 
         @pn.depends(ticker=ticker_selector.param.value, year=tax_year_selector.param.value)
-        def ticker_table_for_tax_year(ticker: str | None = None, year: int | None = None) -> pn.pane.DataFrame:
+        def ticker_table_for_tax_year(ticker: str | None = None, year: int | None = None) -> pn.pane.DataFrame | None:
             if ticker is None or year is None:
-                return pn.pane.DataFrame()
-            return pn.pane.DataFrame(report_df.query(f"TICKER == '{ticker}' and TAX_YEAR == {year}"), width=1800)
+                return None
+            return pn.pane.DataFrame(
+                report_df.query(f"TICKER == '{ticker}' and TAX_YEAR == {year}"), width=self.display_width, index=False
+            )
 
         @pn.depends(ticker=ticker_selector.param.value, year=tax_year_selector.param.value)
         def ticker_result_summary_for_tax_year(ticker: str | None = None, year: int | None = None) -> pn.pane.Markdown:
 
             if ticker is None or year is None:
                 return pn.pane.Markdown(
-                    "### Please select a ticker and tax year in the options on the right.", width=1800
+                    "### Please select a ticker and tax year in the options on the right.", width=self.display_width
                 )
 
             df = report_df.query(f"TICKER == '{ticker}' and TAX_YEAR == {year}")
 
             num_shares = df.NUM_SHARES.sum()
             currency = df.CURRENCY.unique()[0]
-            avg_buy = np.round(df.BUY_PRICE_PER_SHARE.mean(), 2)
-            avg_sell = np.round(df.SELL_PRICE_PER_SHARE.mean(), 2)
-            result = np.round(df.RESULT.sum(), 2)
+            name = df.NAME.unique()[0]
+            avg_buy = df.BUY_PRICE_PER_SHARE.mean()
+            avg_sell = df.SELL_PRICE_PER_SHARE.mean()
+            result = df.RESULT.sum()
 
             summary = (
-                f"For ticker {ticker} and tax year {year}, a total of {num_shares} shares were sold.\n\nThe average"
-                " prices are:"
+                f"For ticker {name} ({ticker}) and tax year {year}, a total of {num_shares:.5f} shares were"
+                " sold.\n\nThe average prices are:"
             )
-            summary += f"\n\n- buy price: {avg_buy} {currency},\n\n- sell price: {avg_sell} {currency}.\n\n"
-            summary += f"The overall result is a {'profit' if result >= 0 else 'loss'} of {result} {currency}."
+            summary += f"\n\n- buy price: {avg_buy:.2f} {currency},\n\n- sell price: {avg_sell:.2f} {currency}.\n\n"
+            summary += f"The overall result is a {'profit' if result >= 0 else 'loss'} of {result:.2f} {currency}."
 
-            return pn.pane.Markdown(summary, width=1800)
+            return pn.pane.Markdown(summary, width=self.display_width)
 
         return pn.template.FastListTemplate(
             site="Panel",
             title="FIFO report",
-            sidebar=[ticker_selector, tax_year_selector],
-            main=[introduction_markdown, ticker_table_for_tax_year, ticker_result_summary_for_tax_year],
+            sidebar=[tax_year_selector, ticker_selector],
+            main=[
+                year_report_image,
+                introduction_markdown,
+                ticker_table_for_tax_year,
+                ticker_result_summary_for_tax_year,
+            ],
         ).servable()

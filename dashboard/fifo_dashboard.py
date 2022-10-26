@@ -6,13 +6,9 @@ from sp.tracker.reports.fifo_position_report import (
     FifoPositionReport,
 )
 
-position_history = PositionHistory(path=TEST_DATA_ROOT)
-wanted_tickers = list(position_history.read(None).Ticker.unique())
-
 fifo_report = FifoPositionReport(
-    tickers=wanted_tickers,
     exec_config=ExecutionConfig(n_workers=1),
-    position_history=position_history,
+    history=PositionHistory(path=TEST_DATA_ROOT),
 )
 
 fifo_dashboard = FifoPositionDashboard(fifo_position_report=fifo_report)

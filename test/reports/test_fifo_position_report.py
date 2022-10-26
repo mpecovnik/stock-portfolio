@@ -1,6 +1,6 @@
 import pytest
 
-from sp.testing.env import PRECISION_GUARD, TEST_DATA_ROOT
+from sp.testing.env import HISTORY_DATA_ROOT, PRECISION_GUARD
 from sp.tracker.core.class_model import ExecutionConfig
 from sp.tracker.data.history import PositionHistory
 from sp.tracker.reports.fifo_position_report import FifoPositionReport
@@ -10,13 +10,12 @@ from sp.tracker.reports.fifo_position_report import FifoPositionReport
 def test_fifo_report_single_ticker(ticker: str) -> None:
 
     fifo_report = FifoPositionReport(
-        tickers=[ticker],
         exec_config=ExecutionConfig(n_workers=1),
-        position_history=PositionHistory(path=TEST_DATA_ROOT),
+        history=PositionHistory(path=HISTORY_DATA_ROOT),
     )
 
     report_df = fifo_report.create_report_by_ticker(ticker=ticker)
-    input_history_df = fifo_report.position_history.read(f"Ticker == '{ticker}'")
+    input_history_df = fifo_report.history.read(f"Ticker == '{ticker}'")
 
     if ticker in ["LGGL", "LGEU"]:
         assert report_df.empty

@@ -1,10 +1,8 @@
 import os
 from abc import abstractmethod
-from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
-from typing import Any, Iterable, List
+from typing import Any, Iterable
 
-import pandas as pd
 from pydantic import BaseModel as PydanticBaseModel
 from pydantic import Extra, validator
 
@@ -59,25 +57,3 @@ class DataBaseModel(BaseModel):
     @abstractmethod
     def read(self, query: str | None) -> Any:
         ...  # pragma: no cover
-
-
-class ReportBaseModel(BaseModel):
-    tickers: List[str] | None = None
-    exec_config: ExecutionConfig = ExecutionConfig()
-
-    @abstractmethod
-    def create_report_by_ticker(self, ticker: str) -> pd.DataFrame:
-        ...  # pragma: no cover
-
-    @abstractmethod
-    def create_report_in_full(self) -> pd.DataFrame:
-        ...  # pragma: no cover
-
-    def create_report(self) -> pd.DataFrame:
-        if self.tickers is None:
-            return self.create_report_in_full()  # pragma: no cover
-
-        with ProcessPoolExecutor(max_workers=self.exec_config.n_workers) as pool:
-            results = pool.map(self.create_report_by_ticker, self.tickers)
-
-        return pd.concat(results, ignore_index=True)

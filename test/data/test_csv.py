@@ -2,18 +2,19 @@ from pathlib import Path
 
 import pytest
 
-from sp.testing.env import TEST_DATA_ROOT
+from sp.testing.env import HISTORY_DATA_ROOT
 from sp.tracker.data.csv import CsvFile
 
 
 @pytest.mark.parametrize(
-    "input_path,expected", [(TEST_DATA_ROOT / "test_2020.csv", True), (TEST_DATA_ROOT / "fake_test_2020.csv", False)]
+    "input_path,expected",
+    [(HISTORY_DATA_ROOT / "test_2020.csv", True), (HISTORY_DATA_ROOT / "fake_test_2020.csv", False)],
 )
 def test_exists(input_path: Path, expected: bool) -> None:
     assert CsvFile(path=input_path).exists() == expected
 
 
-@pytest.mark.parametrize("input_path", [(TEST_DATA_ROOT / "test_2020.csv")])
+@pytest.mark.parametrize("input_path", [(HISTORY_DATA_ROOT / "test_2020.csv")])
 def test_read(input_path: Path) -> None:
 
     read_columns = set(["ISIN", "Price / share"])
@@ -25,7 +26,7 @@ def test_read(input_path: Path) -> None:
     assert set(data["Action"].values) == read_actions
 
 
-@pytest.mark.parametrize("input_path", [(TEST_DATA_ROOT / "fake_test_2020.csv")])
+@pytest.mark.parametrize("input_path", [(HISTORY_DATA_ROOT / "fake_test_2020.csv")])
 def test_read_exception(input_path: Path) -> None:
 
     read_columns = set(["ISIN", "Price / share"])
