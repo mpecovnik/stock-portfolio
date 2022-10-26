@@ -1,11 +1,11 @@
 import pandas as pd
 
-from sp.tracker.core.class_model import DataBaseModel
+from sp.tracker.core.class_model import HistoryModel
 from sp.tracker.core.decorators import check_existence
 from sp.tracker.data.csv import CsvFile
 
 
-class History(DataBaseModel):
+class History(HistoryModel):
     def exists(self) -> bool:
         return self.path.exists() and self.path.is_dir() and len(list(self.path.iterdir())) > 0
 
@@ -36,6 +36,7 @@ class DividendHistory(History):
         "Price / share",
         "Total (EUR)",
         "Withholding tax",
+        "Exchange rate",
     ]
     _actions = ["Dividend (Ordinary)"]
 
@@ -50,5 +51,6 @@ class PositionHistory(History):
         "Currency (Price / share)",
         "Price / share",
         "Total (EUR)",
+        "Exchange rate",
     ]
     _actions = ["Market buy", "Market sell"]

@@ -1,10 +1,10 @@
 import pandas as pd
 
-from sp.tracker.core.class_model import DataBaseModel
+from sp.tracker.core.class_model import HistoryModel
 from sp.tracker.core.decorators import check_existence
 
 
-class CsvFile(DataBaseModel):
+class CsvFile(HistoryModel):
     def exists(self) -> bool:
         return self.path.exists() and self.path.is_file()
 

@@ -1,12 +1,11 @@
 from pathlib import Path
-from unittest.mock import Mock
 
 import pytest
 
-from sp.tracker.core.class_model import DataBaseModel
+from sp.tracker.core.class_model import HistoryModel
 
 
-class Data(DataBaseModel):
+class Data(HistoryModel):
     def exists(self) -> bool:
         return True  # pragma: no cover
 

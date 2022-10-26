@@ -6,7 +6,7 @@ from sp.tracker.data.history import PositionHistory
 from sp.tracker.reports.fifo_position_report import FifoPositionReport
 
 
-@pytest.mark.parametrize("ticker", ["GME", "BMO", "LGGL", "LGEU", "DBXG", "RTX", "GD", "ABBV", "STOR"])
+@pytest.mark.parametrize("ticker", ["GME", "BMO", "LGGL", "LGEU", "DBXG", "RTX", "GD", "ABBV", "STOR", "RDSA"])
 def test_fifo_report_single_ticker(ticker: str) -> None:
 
     fifo_report = FifoPositionReport(

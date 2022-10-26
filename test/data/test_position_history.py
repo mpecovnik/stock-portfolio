@@ -18,6 +18,7 @@ def test_position_history() -> None:
             "Price / share",
             "Total (EUR)",
             "Action",
+            "Exchange rate",
         ]
     )
     assert set(trans_history.actions) == set(["Market buy", "Market sell"])

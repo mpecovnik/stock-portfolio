@@ -1,8 +1,8 @@
 import os
-from abc import abstractmethod
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Iterable
 
+import pandas as pd
 from pydantic import BaseModel as PydanticBaseModel
 from pydantic import Extra, validator
 
@@ -33,6 +33,15 @@ class ExecutionConfig(BaseModel):
 
 class DataBaseModel(BaseModel):
     path: Path
+
+    def exists(self) -> bool:
+        ...  # pragma: no cover
+
+    def read(self, query: str | None) -> pd.DataFrame:
+        ...  # pragma: no cover
+
+
+class HistoryModel(DataBaseModel):
     _columns: Iterable[str] | None = None
     _actions: Iterable[str] | None = None
 
@@ -49,11 +58,3 @@ class DataBaseModel(BaseModel):
             raise AttributeError("Property '_actions' must be set by concrete class implementations.")
 
         return self._actions
-
-    @abstractmethod
-    def exists(self) -> bool:
-        ...  # pragma: no cover
-
-    @abstractmethod
-    def read(self, query: str | None) -> Any:
-        ...  # pragma: no cover

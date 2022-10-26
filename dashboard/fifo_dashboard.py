@@ -1,4 +1,4 @@
-from sp.testing.env import TEST_DATA_ROOT
+from sp.testing.env import HISTORY_DATA_ROOT
 from sp.tracker.core.class_model import ExecutionConfig
 from sp.tracker.data.history import PositionHistory
 from sp.tracker.reports.fifo_position_report import (
@@ -8,7 +8,7 @@ from sp.tracker.reports.fifo_position_report import (
 
 fifo_report = FifoPositionReport(
     exec_config=ExecutionConfig(n_workers=1),
-    history=PositionHistory(path=TEST_DATA_ROOT),
+    history=PositionHistory(path=HISTORY_DATA_ROOT),
 )
 
 fifo_dashboard = FifoPositionDashboard(fifo_position_report=fifo_report)

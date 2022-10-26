@@ -19,7 +19,7 @@ A = TypeVar("A", bound="Action")
 
 class Action(BaseModel):
     type: str
-    time: str
+    date: str
     num_shares: float
     price: float
 
@@ -56,30 +56,30 @@ class FifoPositionReport(ReportBaseModel):
 
         isin = ticker_position_history["ISIN"].unique()[0]
         name = ticker_position_history["Name"].unique()[0]
-        currencies = ticker_position_history["Currency (Price / share)"].unique()
 
-        if len(currencies) != 1:
-            raise ValueError  # pragma: no cover
-
-        currency = currencies[0]
+        ticker_position_history.loc[:, "Price / share"] = ticker_position_history.loc[
+            :, "Price / share"
+        ] / ticker_position_history.loc[:, "Exchange rate"].astype(float)
+        ticker_position_history.loc[:, "DATE"] = (
+            ticker_position_history.Time.astype("datetime64[ns]").apply(lambda x: x.date().strftime("%Y-%m-%d")).values
+        )
+        ticker_position_history = ticker_position_history[["DATE", "No. of shares", "Price / share", "Action"]]
 
         for _, row in ticker_position_history.iterrows():
             if row["Action"] == "Market buy":
                 buy_queue.put(
                     BuyAction(
-                        time=row["Time"],
+                        date=row["DATE"],
                         num_shares=row["No. of shares"],
                         price=row["Price / share"],
-                        currency=row["Currency (Price / share)"],
                     )
                 )
             else:
                 sell_queue.put(
                     SellAction(
-                        time=row["Time"],
+                        date=row["DATE"],
                         num_shares=row["No. of shares"],
                         price=row["Price / share"],
-                        currency=row["Currency (Price / share)"],
                     )
                 )
 
@@ -124,13 +124,18 @@ class FifoPositionReport(ReportBaseModel):
 
             actions_dict["NUM_SHARES"].append(current_sell.num_shares)
 
-            actions_dict["BUY_DATE"].append(current_buy.time)
+            actions_dict["BUY_DATE"].append(current_buy.date)
             actions_dict["BUY_PRICE_PER_SHARE"].append(current_buy.price)
-            actions_dict["SELL_DATE"].append(current_sell.time)
+            actions_dict["SELL_DATE"].append(current_sell.date)
             actions_dict["SELL_PRICE_PER_SHARE"].append(current_sell.price)
 
         report_df = pd.DataFrame(actions_dict)
-        report_df.loc[:, ["TICKER", "NAME", "ISIN", "CURRENCY"]] = ticker, name, isin, currency
+        report_df.loc[:, ["TICKER", "NAME", "ISIN", "CURRENCY"]] = (
+            ticker,
+            name,
+            isin,
+            "EUR",
+        )
         report_df.loc[:, "TAX_YEAR"] = report_df.SELL_DATE.astype("datetime64[ns]").apply(lambda x: x.year).values
         report_df.loc[:, "RESULT"] = report_df.loc[:, "NUM_SHARES"] * (
             report_df.loc[:, "SELL_PRICE_PER_SHARE"] - report_df.loc[:, "BUY_PRICE_PER_SHARE"]
@@ -221,6 +226,7 @@ class FifoPositionDashboard(BaseModel):
     def serve_dashboard(self) -> param.Parameterized:
 
         report_df = self.fifo_position_report.create_report()
+        currency = "EUR"
 
         year_options = self.fifo_position_report.years
         if year_options is None:
@@ -284,7 +290,6 @@ class FifoPositionDashboard(BaseModel):
             df = report_df.query(f"TICKER == '{ticker}' and TAX_YEAR == {year}")
 
             num_shares = df.NUM_SHARES.sum()
-            currency = df.CURRENCY.unique()[0]
             name = df.NAME.unique()[0]
             avg_buy = df.BUY_PRICE_PER_SHARE.mean()
             avg_sell = df.SELL_PRICE_PER_SHARE.mean()
