@@ -10,7 +10,7 @@ from bokeh.models.formatters import PrintfTickFormatter
 from bokeh.plotting import Figure, figure
 
 from sp.testing.env import PRECISION_GUARD
-from sp.tracker.core.class_model import BaseModel
+from sp.tracker.core.model import BaseModel
 from sp.tracker.data.history import PositionHistory
 from sp.tracker.reports.model import ReportBaseModel
 

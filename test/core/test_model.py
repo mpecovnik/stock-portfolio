@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from sp.tracker.core.class_model import HistoryModel
+from sp.tracker.core.model import HistoryModel
 
 
 class Data(HistoryModel):

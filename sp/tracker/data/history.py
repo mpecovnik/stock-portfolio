@@ -1,7 +1,7 @@
 import pandas as pd
 
-from sp.tracker.core.class_model import HistoryModel
 from sp.tracker.core.decorators import check_existence
+from sp.tracker.core.model import HistoryModel
 from sp.tracker.data.csv import CsvFile
 
 

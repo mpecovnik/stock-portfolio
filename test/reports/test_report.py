@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 
 from sp.testing.env import HISTORY_DATA_ROOT
-from sp.tracker.core.class_model import ExecutionConfig
+from sp.tracker.core.model import ExecutionConfig
 from sp.tracker.data.history import DividendHistory
 from sp.tracker.reports.dividend_report import DividendReport
 

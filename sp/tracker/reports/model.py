@@ -4,7 +4,7 @@ from typing import List
 
 import pandas as pd
 
-from sp.tracker.core.class_model import BaseModel, ExecutionConfig
+from sp.tracker.core.model import BaseModel, ExecutionConfig
 from sp.tracker.data.history import History
 
 
