@@ -1,7 +1,6 @@
 import pandas as pd
 
-from sp.tracker.core.decorators import check_existence
-from sp.tracker.core.model import HistoryModel
+from sp.tracker.core.model import HistoryModel, check_existence
 from sp.tracker.data.csv import CsvFile
 
 
@@ -10,7 +9,7 @@ class History(HistoryModel):
         return self.path.exists() and self.path.is_dir() and len(list(self.path.iterdir())) > 0
 
     @check_existence
-    def read(self, query: str | None) -> pd.DataFrame:
+    def read(self, query: str | None = None) -> pd.DataFrame:
 
         history_data = []
 

@@ -1,7 +1,6 @@
 import pandas as pd
 
-from sp.tracker.core.decorators import check_existence
-from sp.tracker.core.model import HistoryModel
+from sp.tracker.core.model import HistoryModel, check_existence
 
 
 class CsvFile(HistoryModel):
@@ -9,7 +8,7 @@ class CsvFile(HistoryModel):
         return self.path.exists() and self.path.is_file()
 
     @check_existence
-    def read(self, query: str | None) -> pd.DataFrame:
+    def read(self, query: str | None = None) -> pd.DataFrame:
         data = pd.read_csv(self.path)
 
         if query is not None:

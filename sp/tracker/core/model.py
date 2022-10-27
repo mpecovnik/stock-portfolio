@@ -1,6 +1,8 @@
 import os
+from collections.abc import Callable
+from functools import wraps
 from pathlib import Path
-from typing import Iterable
+from typing import Iterable, TypeVar
 
 import pandas as pd
 from pydantic import BaseModel as PydanticBaseModel
@@ -31,13 +33,37 @@ class ExecutionConfig(BaseModel):
         return n_workers
 
 
-class DataBaseModel(BaseModel):
+class PathModel(BaseModel):
     path: Path
 
     def exists(self) -> bool:
         ...  # pragma: no cover
 
-    def read(self, query: str | None) -> pd.DataFrame:  # pylint: disable=unused-argument
+
+R = TypeVar("R", bound=PathModel)
+
+funcs = {}
+
+
+def check_existence(func: Callable[[R, str | None], pd.DataFrame]) -> Callable[[R, str | None], pd.DataFrame]:
+    """Register any function at definition time in
+    the 'funcs' dict."""
+
+    # Registers the function during function definition time.
+    funcs[func.__name__] = func
+
+    @wraps(func)
+    def wrapper(self: R, query: str | None) -> pd.DataFrame:
+        if not self.exists():
+            raise ValueError(f"Data for class {self.__class__.__name__} at path: {self.path} doesn't exist.")
+        return func(self, query)
+
+    return wrapper
+
+
+class DataBaseModel(PathModel):
+    @check_existence
+    def read(self, query: str | None = None) -> pd.DataFrame:  # pylint: disable=unused-argument
         ...  # pragma: no cover
 
 
