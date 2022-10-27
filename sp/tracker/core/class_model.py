@@ -37,7 +37,7 @@ class DataBaseModel(BaseModel):
     def exists(self) -> bool:
         ...  # pragma: no cover
 
-    def read(self, query: str | None) -> pd.DataFrame:
+    def read(self, query: str | None) -> pd.DataFrame:  # pylint: disable=unused-argument
         ...  # pragma: no cover
 
 
