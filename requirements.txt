@@ -2,3 +2,9 @@ pandas
 pydantic
 toml
 rapidjson
+pytest
+mypy
+black
+isort
+pylint
+coverage
