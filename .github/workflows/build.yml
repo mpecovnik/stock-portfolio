@@ -43,7 +43,7 @@ jobs:
         mypy --config-file ./pyproject.toml ./sp
     - name: Test with pytest
       run: |
-        coverage run -m pytest test -vv  && coverage report --fail-under=$MINIMUM_TEST_COVERAGE
+        coverage run -m pytest test -vv  && coverage report --fail-under=$MINIMUM_TEST_COVERAGE && coverage xml
 
     - name: Upload code coverage
       uses: codecov/codecov-action@v2
