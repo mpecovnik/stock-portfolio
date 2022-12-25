@@ -22,6 +22,7 @@ class BaseModel(PydanticBaseModel):
 class PathModel(BaseModel):
     path: Path
 
+    @abstractmethod
     def exists(self) -> bool:
         ...  # pragma: no cover
 
