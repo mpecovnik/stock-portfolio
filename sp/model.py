@@ -1,10 +1,10 @@
+import os
+from abc import abstractmethod
 from collections.abc import Callable
+from concurrent.futures import ProcessPoolExecutor
 from functools import wraps
 from pathlib import Path
-from typing import Iterable, TypeVar, List, Optional
-from abc import abstractmethod
-from concurrent.futures import ProcessPoolExecutor
-import os
+from typing import Iterable, List, Optional, TypeVar
 
 import pandas as pd
 from pydantic import BaseModel as PydanticBaseModel
@@ -31,7 +31,7 @@ R = TypeVar("R", bound=PathModel)
 funcs = {}
 
 
-def check_existence(func: Callable[[R, str | None], pd.DataFrame]) -> Callable[[R, str | None], pd.DataFrame]:
+def check_existence(func: Callable[[R], pd.DataFrame]) -> Callable[[R], pd.DataFrame]:
     """Register any function at definition time in
     the 'funcs' dict."""
 
@@ -81,7 +81,10 @@ class HistoryModel(PathModel):
     def read(self) -> pd.DataFrame:
         return pd.concat(
             [
-                pd.read_csv(csv_path, usecols=list(self.columns)).query(self.read_query)
+                pd.read_csv(
+                    csv_path,
+                    usecols=list(self.columns),
+                ).query(self.read_query)
                 for csv_path in self.path.iterdir()
             ],
             ignore_index=True,
@@ -103,6 +106,16 @@ class ReportModel(BaseModel):
 
         return value if value <= cpu_count else cpu_count
 
+    def add_ticker_to_history_query(self, ticker: str) -> HistoryModel:
+        ticker_history = self.history.copy()
+
+        ticker_query = f"Ticker == '{ticker}'"
+        if self.history.query is not None:
+            ticker_query += f"and {self.history.query}"
+        ticker_history.query = ticker_query
+
+        return ticker_history
+
     @abstractmethod
     def create_report_by_ticker(self, ticker: str) -> pd.DataFrame:
         ...  # pragma: no cover
@@ -118,7 +131,7 @@ class ReportModel(BaseModel):
 
         tickers_in_years = list(history.query(f"YEAR in {history_years}").Ticker.unique())
 
-        with ProcessPoolExecutor(max_workers=self.exec_config.n_workers) as pool:
+        with ProcessPoolExecutor(max_workers=self.n_workers) as pool:
             results = pool.map(self.create_report_by_ticker, tickers_in_years)
 
         return pd.concat(results, ignore_index=True)

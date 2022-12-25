@@ -1,10 +1,11 @@
 from queue import Queue
 from typing import Dict, List
+
 import pandas as pd
 
-from .utils import PRECISION_GUARD, SellAction, BuyAction
+from .history import DividendHistory, PositionHistory
 from .model import ReportModel
-from .history import PositionHistory, DividendHistory
+from .utils import PRECISION_GUARD, BuyAction, SellAction
 
 
 class DividendReport(ReportModel):
@@ -14,14 +15,7 @@ class DividendReport(ReportModel):
         ...  # pragma: no cover
 
     def create_report_by_ticker(self, ticker: str) -> pd.DataFrame:
-
-        ticker_history = self.history.copy()
-
-        ticker_query = f"Ticker == '{ticker}'"
-        if self.history.query is not None:
-            ticker_query += f"and {self.history.query}"
-        ticker_history.query = ticker_query
-
+        ticker_history = self.add_ticker_to_history_query(ticker=ticker)
         return ticker_history.read()
 
 
@@ -29,14 +23,7 @@ class FifoPositionReport(ReportModel):
     history: PositionHistory
 
     def create_report_by_ticker(self, ticker: str) -> pd.DataFrame:
-
-        ticker_history = self.history.copy()
-
-        ticker_query = f"Ticker == '{ticker}'"
-        if self.history.query is not None:
-            ticker_query += f"and {self.history.query}"
-        ticker_history.query = ticker_query
-
+        ticker_history = self.add_ticker_to_history_query(ticker=ticker)
         ticker_position_history = ticker_history.read().sort_values("Time")
 
         if "Market sell" not in ticker_position_history["Action"].unique():

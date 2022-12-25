@@ -2,12 +2,6 @@ from pathlib import Path
 
 import pytest
 
-from sp.model import HistoryModel
-
-from pathlib import Path
-
-import pytest
-
 from sp._testing.env import HISTORY_DATA_ROOT
 from sp.model import HistoryModel
 

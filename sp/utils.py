@@ -1,4 +1,5 @@
 from typing import TypeVar
+
 from .model import BaseModel
 
 PRECISION_GUARD = 1e-9
