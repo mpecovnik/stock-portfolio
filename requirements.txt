@@ -1,11 +1,4 @@
-mypy
-black
-isort
-pylint
 pandas
-flask
 pydantic
 toml
 rapidjson
-panel
-hvplot
