@@ -30,7 +30,7 @@ def test_create_report_for_single_ticker(input_path: Path) -> None:
     report = div_report.create_report_by_ticker(ticker="VECP")
 
     assert report["Withholding tax"].sum() == 0.07
-    assert report["Total (EUR)"].sum() == 24.76
+    assert abs(report["Total (EUR)"].sum() - 24.76) < 0.001
 
 
 @pytest.mark.parametrize("input_path", [(HISTORY_DATA_ROOT)])
@@ -42,5 +42,5 @@ def test_create_report_for_all(input_path: Path) -> None:
 
     full_report = div_report.create_report()
 
-    assert full_report.query("Ticker == 'VECP'")["Total (EUR)"].sum() == 24.76
+    assert abs(full_report.query("Ticker == 'VECP'")["Total (EUR)"].sum() - 24.76) < 0.001
     assert set(full_report.Ticker.unique()) == {"VECP", "VGTY", "CORP"}
