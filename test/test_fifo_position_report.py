@@ -1,21 +1,20 @@
 import pytest
 
-from sp.testing.env import HISTORY_DATA_ROOT, PRECISION_GUARD
-from sp.tracker.core.model import ExecutionConfig
-from sp.tracker.data.history import PositionHistory
-from sp.tracker.reports.fifo_position_report import FifoPositionReport
+from sp._testing.env import HISTORY_DATA_ROOT, PRECISION_GUARD
+from sp.history import PositionHistory
+from sp.report import FifoPositionReport
 
 
 @pytest.mark.parametrize("ticker", ["GME", "BMO", "LGGL", "LGEU", "DBXG", "RTX", "GD", "ABBV", "STOR", "RDSA"])
 def test_fifo_report_single_ticker(ticker: str) -> None:
 
     fifo_report = FifoPositionReport(
-        exec_config=ExecutionConfig(n_workers=1),
-        history=PositionHistory(path=HISTORY_DATA_ROOT),
+        n_workers=1,
+        history=PositionHistory(path=HISTORY_DATA_ROOT, query=f"Ticker == '{ticker}'"),
     )
 
     report_df = fifo_report.create_report_by_ticker(ticker=ticker)
-    input_history_df = fifo_report.history.read(f"Ticker == '{ticker}'")
+    input_history_df = fifo_report.history.read()
 
     if ticker in ["LGGL", "LGEU"]:
         assert report_df.empty
