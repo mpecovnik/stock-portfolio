@@ -11,9 +11,6 @@ from .utils import PRECISION_GUARD, BuyAction, SellAction
 class DividendReport(ReportModel):
     history: DividendHistory
 
-    def create_report_in_full(self) -> pd.DataFrame:
-        ...  # pragma: no cover
-
     def create_report_by_ticker(self, ticker: str) -> pd.DataFrame:
         ticker_history = self.add_ticker_to_history_query(ticker=ticker)
         return ticker_history.read()

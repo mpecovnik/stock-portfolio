@@ -129,7 +129,7 @@ class ReportModel(BaseModel):
         if self.years is not None and not set(self.years) <= set(history_years):
             raise ValueError(f"Specified {self.years=} is not contained in history. It only contains {history_years}.")
 
-        tickers_in_years = list(history.query(f"YEAR in {history_years}").Ticker.unique())
+        tickers_in_years = list(history.query(f"YEAR in {self.years}").Ticker.unique())
 
         with ProcessPoolExecutor(max_workers=self.n_workers) as pool:
             results = pool.map(self.create_report_by_ticker, tickers_in_years)
