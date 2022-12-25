@@ -43,4 +43,4 @@ def test_create_report_for_all(input_path: Path) -> None:
     full_report = div_report.create_report()
 
     assert full_report.query("Ticker == 'VECP'")["Total (EUR)"].sum() == 24.76
-    assert set(full_report.Ticker.unique()) == {'VECP', "VGTY", "CORP"}
+    assert set(full_report.Ticker.unique()) == {"VECP", "VGTY", "CORP"}
