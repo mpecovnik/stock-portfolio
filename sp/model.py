@@ -68,7 +68,11 @@ class HistoryModel(PathModel):
 
     @property
     def read_query(self) -> str:
-        return f"Action in {list(self.actions)}" if self.query is None else f"Action in {list(self.actions)} and {self.query}"
+        return (
+            f"Action in {list(self.actions)}"
+            if self.query is None
+            else f"Action in {list(self.actions)} and {self.query}"
+        )
 
     def exists(self) -> bool:
         return self.path.exists() and self.path.is_dir() and len(list(self.path.iterdir())) > 0
@@ -76,7 +80,10 @@ class HistoryModel(PathModel):
     @check_existence
     def read(self) -> pd.DataFrame:
         return pd.concat(
-            [pd.read_csv(csv_path, usecols=list(self.columns)).query(self.read_query) for csv_path in self.path.iterdir()],
+            [
+                pd.read_csv(csv_path, usecols=list(self.columns)).query(self.read_query)
+                for csv_path in self.path.iterdir()
+            ],
             ignore_index=True,
         )
 

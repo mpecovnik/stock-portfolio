@@ -28,9 +28,6 @@ class DividendReport(ReportModel):
 class FifoPositionReport(ReportModel):
     history: PositionHistory
 
-    def create_report_in_full(self) -> pd.DataFrame:
-        return super().create_report_by_ticker()
-
     def create_report_by_ticker(self, ticker: str) -> pd.DataFrame:
 
         ticker_history = self.history.copy()
