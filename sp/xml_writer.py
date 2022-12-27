@@ -49,10 +49,10 @@ class DohDivInfo(BaseModel):
     def attr_conversion(attr_name: str) -> str:
         DICT = {
             "period": "Period",
-            "email_address": "EmailAdress",
+            "email_address": "EmailAddress",
             "phone_number": "PhoneNumber",
             "resident_country": "ResidentCountry",
-            "is_resident": "isResident",
+            "is_resident": "IsResident",
             "locked": "Locked",
             "self_report": "SelfReport",
             "workflow_type": "WfTypeU",
