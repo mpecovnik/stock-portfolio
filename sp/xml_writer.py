@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 from typing import Optional
-from xml.etree.ElementTree import Element, ElementTree, SubElement
+from xml.etree.ElementTree import Element, ElementTree, SubElement, indent
 
 import pandas as pd
 from pydantic import parse_obj_as
@@ -169,4 +169,5 @@ class DivDohXML(BaseModel):
             self.add_dividend(dividend_root=dividend_root, row=row)
 
         tree = ElementTree(element=root)
+        indent(tree)
         tree.write(self.output_path)
