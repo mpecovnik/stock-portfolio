@@ -80,14 +80,15 @@ class DivDohXML(BaseModel):
         return PersonalInfo.from_file(self.personal_info_path)
 
     def create_header(self, root: Element) -> Element:
-        child = SubElement(root, "edp:Header")
-        taxpayer_child = SubElement(child, "edp:taxpayer")
+        header = SubElement(root, "edp:Header")
+
+        taxpayer_child = SubElement(header, "edp:taxpayer")
 
         for name, value in self.personal_info.base_info:
-            child = SubElement(
-                taxpayer_child, f"edp:{self.personal_info.base_info.attr_conversion(name)}"
-            )
-            child.text = value
+            SubElement(taxpayer_child, f"edp:{self.personal_info.base_info.attr_conversion(name)}").text = value
+
+        workflow = SubElement(header, "edp:Workflow")
+        SubElement(workflow, "edp:DocumentWorkflowID").text = "O"
 
         return root
 
@@ -109,19 +110,16 @@ class DivDohXML(BaseModel):
         for name, value in self.personal_info.doh_div_info:
             if isinstance(value, bool):
                 value = str(int(value))
-            child = SubElement(doh_div_child, self.personal_info.doh_div_info.attr_conversion(name))
-            child.text=value
+
+            SubElement(doh_div_child, self.personal_info.doh_div_info.attr_conversion(name)).text = value
 
         return doh_div_root
 
     def add_dividend(self, dividend_root: Element, row: pd.Series) -> None:
         divident_item = SubElement(dividend_root, "Dividend")
-        ch=SubElement(divident_item, "Date")
-        ch.text = row.DATE
-        ch=SubElement(divident_item, "PayerIdentificationNumber")
-        ch.text = row.ISIN
-        ch=SubElement(divident_item, "PayerName")
-        ch.text = row.Name
+        SubElement(divident_item, "Date").text = row.DATE
+        SubElement(divident_item, "PayerIdentificationNumber").text = row.ISIN
+        SubElement(divident_item, "PayerName").text = row.Name
 
         if "Vanguard" in row.Name:  # TODO
             address = "Europadamm 2-6, 41460 Neuss, Germany"
@@ -134,20 +132,13 @@ class DivDohXML(BaseModel):
         else:
             raise ValueError
 
-        ch=SubElement(divident_item, "PayerAddress")
-        ch.text = address
-        ch=SubElement(divident_item, "PayerCountry")
-        ch.text = country
-        ch=SubElement(divident_item, "Type")
-        ch.text = "1"
-        ch=SubElement(divident_item, "Value")
-        ch.text = str(row["Total (EUR)"])
-        ch=SubElement(divident_item, "ForeignTax")
-        ch.text = str(row["Withholding tax"])
-        ch=SubElement(divident_item, "SourceCountry")
-        ch.text = country
-        ch=SubElement(divident_item, "ReliefStatement")
-        ch.text = statement
+        SubElement(divident_item, "PayerAddress").text = address
+        SubElement(divident_item, "PayerCountry").text = country
+        SubElement(divident_item, "Type").text = "1"
+        SubElement(divident_item, "Value").text = str(row["Total (EUR)"])
+        SubElement(divident_item, "ForeignTax").text = str(row["Withholding tax"])
+        SubElement(divident_item, "SourceCountry").text = country
+        SubElement(divident_item, "ReliefStatement").text = statement
 
     def write(self) -> None:
         root = Element(
