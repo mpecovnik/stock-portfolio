@@ -84,9 +84,10 @@ class DivDohXML(BaseModel):
         taxpayer_child = SubElement(child, "edp:taxpayer")
 
         for name, value in self.personal_info.base_info:
-            SubElement(
-                taxpayer_child, f"edp:{self.personal_info.base_info.attr_conversion(name)}", attrib={"text": value}
+            child = SubElement(
+                taxpayer_child, f"edp:{self.personal_info.base_info.attr_conversion(name)}"
             )
+            child.text = value
 
         return root
 
@@ -107,16 +108,20 @@ class DivDohXML(BaseModel):
 
         for name, value in self.personal_info.doh_div_info:
             if isinstance(value, bool):
-                value = str(value).lower()
-            SubElement(doh_div_child, self.personal_info.doh_div_info.attr_conversion(name), attrib={"text": value})
+                value = str(int(value))
+            child = SubElement(doh_div_child, self.personal_info.doh_div_info.attr_conversion(name))
+            child.text=value
 
         return doh_div_root
 
     def add_dividend(self, dividend_root: Element, row: pd.Series) -> None:
-        divident_item = SubElement(dividend_root, "DividendItem")
-        SubElement(divident_item, "Date", attrib={"text": row.DATE})
-        SubElement(divident_item, "PayerIdentificationNumber", attrib={"text": row.ISIN})
-        SubElement(divident_item, "PayerName", attrib={"text": row.Name})
+        divident_item = SubElement(dividend_root, "Dividend")
+        ch=SubElement(divident_item, "Date")
+        ch.text = row.DATE
+        ch=SubElement(divident_item, "PayerIdentificationNumber")
+        ch.text = row.ISIN
+        ch=SubElement(divident_item, "PayerName")
+        ch.text = row.Name
 
         if "Vanguard" in row.Name:  # TODO
             address = "Europadamm 2-6, 41460 Neuss, Germany"
@@ -129,13 +134,20 @@ class DivDohXML(BaseModel):
         else:
             raise ValueError
 
-        SubElement(divident_item, "PayerAddress", attrib={"text": address})
-        SubElement(divident_item, "PayerCountry", attrib={"text": country})
-        SubElement(divident_item, "Type", attrib={"text": "1"})
-        SubElement(divident_item, "Value", attrib={"text": str(row["Total (EUR)"])})
-        SubElement(divident_item, "ForeignTax", attrib={"text": str(row["Withholding tax"])})
-        SubElement(divident_item, "SourceCountry", attrib={"text": country})
-        SubElement(divident_item, "ReliefStatement", attrib={"text": statement})
+        ch=SubElement(divident_item, "PayerAddress")
+        ch.text = address
+        ch=SubElement(divident_item, "PayerCountry")
+        ch.text = country
+        ch=SubElement(divident_item, "Type")
+        ch.text = "1"
+        ch=SubElement(divident_item, "Value")
+        ch.text = str(row["Total (EUR)"])
+        ch=SubElement(divident_item, "ForeignTax")
+        ch.text = str(row["Withholding tax"])
+        ch=SubElement(divident_item, "SourceCountry")
+        ch.text = country
+        ch=SubElement(divident_item, "ReliefStatement")
+        ch.text = statement
 
     def write(self) -> None:
         root = Element(
@@ -149,8 +161,7 @@ class DivDohXML(BaseModel):
         envelope = self.create_header(root=root)
         SubElement(envelope, "edp:AttachmentList")
         SubElement(envelope, "edp:Signatures")
-        doh_div_root = self.create_doh_div_root(envelope=envelope)
-        dividend_root = SubElement(doh_div_root, "Dividend")
+        dividend_root = self.create_doh_div_root(envelope=envelope)
 
         report = self.load_report()
 
