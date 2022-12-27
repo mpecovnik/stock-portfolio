@@ -21,7 +21,9 @@ class DividendReport(ReportModel):
         report = ticker_history.query(f"TAX_YEAR in {self.years}")
 
         report = report[["DATE", "Ticker", "Name", "ISIN", "Total (EUR)", "Withholding tax", "TAX_YEAR"]]
-        report = report.rename(columns={"Name": "NAME", "Ticker": "TICKER", "Total (EUR)": "TOTAL", "Withholding tax": "TAX"})
+        report = report.rename(
+            columns={"Name": "NAME", "Ticker": "TICKER", "Total (EUR)": "TOTAL", "Withholding tax": "TAX"}
+        )
 
         return report
 

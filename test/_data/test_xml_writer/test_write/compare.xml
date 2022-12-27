@@ -1,0 +1,270 @@
+<Envelope xmlns="http://edavki.durs.si/Documents/Schemas/Doh_Div_3.xsd" xmlns:edp="http://edavki.durs.si/Documents/Schemas/EDP-Common-1.xsd">
+  <edp:Header>
+    <edp:taxpayer>
+      <edp:taxNumber>Test</edp:taxNumber>
+      <edp:taxpayerType>Test</edp:taxpayerType>
+      <edp:name>Test</edp:name>
+      <edp:address1>Test</edp:address1>
+      <edp:city>Test</edp:city>
+      <edp:postNumber>1111</edp:postNumber>
+      <edp:birthDate>1994-01-01</edp:birthDate>
+    </edp:taxpayer>
+    <edp:Workflow>
+      <edp:DocumentWorkflowID>O</edp:DocumentWorkflowID>
+    </edp:Workflow>
+  </edp:Header>
+  <edp:AttachmentList />
+  <edp:Signatures />
+  <body>
+    <Doh_Div>
+      <Period>2022</Period>
+      <EmailAddress>test.test@test.com</EmailAddress>
+      <PhoneNumber>000000000</PhoneNumber>
+      <ResidentCountry>Test</ResidentCountry>
+      <IsResident>1</IsResident>
+      <Locked>0</Locked>
+      <SelfReport>0</SelfReport>
+      <WfTypeU>1</WfTypeU>
+    </Doh_Div>
+    <Dividend>
+      <Date>2022-02-03</Date>
+      <PayerIdentificationNumber>IE00BZ163G84</PayerIdentificationNumber>
+      <PayerName>Vanguard EUR Corporate Bond (Dist)</PayerName>
+      <PayerAddress>Europadamm 2-6, 41460 Neuss, Germany</PayerAddress>
+      <PayerCountry>Germany</PayerCountry>
+      <Type>1</Type>
+      <Value>1.2</Value>
+      <ForeignTax>0.0</ForeignTax>
+      <SourceCountry>Germany</SourceCountry>
+      <ReliefStatement>192/2006, 10. &#269;len</ReliefStatement>
+    </Dividend>
+    <Dividend>
+      <Date>2022-03-04</Date>
+      <PayerIdentificationNumber>IE00BZ163G84</PayerIdentificationNumber>
+      <PayerName>Vanguard EUR Corporate Bond (Dist)</PayerName>
+      <PayerAddress>Europadamm 2-6, 41460 Neuss, Germany</PayerAddress>
+      <PayerCountry>Germany</PayerCountry>
+      <Type>1</Type>
+      <Value>1.06</Value>
+      <ForeignTax>0.0</ForeignTax>
+      <SourceCountry>Germany</SourceCountry>
+      <ReliefStatement>192/2006, 10. &#269;len</ReliefStatement>
+    </Dividend>
+    <Dividend>
+      <Date>2022-03-31</Date>
+      <PayerIdentificationNumber>IE00BZ163G84</PayerIdentificationNumber>
+      <PayerName>Vanguard EUR Corporate Bond (Dist)</PayerName>
+      <PayerAddress>Europadamm 2-6, 41460 Neuss, Germany</PayerAddress>
+      <PayerCountry>Germany</PayerCountry>
+      <Type>1</Type>
+      <Value>1.09</Value>
+      <ForeignTax>0.0</ForeignTax>
+      <SourceCountry>Germany</SourceCountry>
+      <ReliefStatement>192/2006, 10. &#269;len</ReliefStatement>
+    </Dividend>
+    <Dividend>
+      <Date>2022-04-29</Date>
+      <PayerIdentificationNumber>IE00BZ163G84</PayerIdentificationNumber>
+      <PayerName>Vanguard EUR Corporate Bond (Dist)</PayerName>
+      <PayerAddress>Europadamm 2-6, 41460 Neuss, Germany</PayerAddress>
+      <PayerCountry>Germany</PayerCountry>
+      <Type>1</Type>
+      <Value>1.22</Value>
+      <ForeignTax>0.0</ForeignTax>
+      <SourceCountry>Germany</SourceCountry>
+      <ReliefStatement>192/2006, 10. &#269;len</ReliefStatement>
+    </Dividend>
+    <Dividend>
+      <Date>2022-06-03</Date>
+      <PayerIdentificationNumber>IE00BZ163G84</PayerIdentificationNumber>
+      <PayerName>Vanguard EUR Corporate Bond (Dist)</PayerName>
+      <PayerAddress>Europadamm 2-6, 41460 Neuss, Germany</PayerAddress>
+      <PayerCountry>Germany</PayerCountry>
+      <Type>1</Type>
+      <Value>1.74</Value>
+      <ForeignTax>0.0</ForeignTax>
+      <SourceCountry>Germany</SourceCountry>
+      <ReliefStatement>192/2006, 10. &#269;len</ReliefStatement>
+    </Dividend>
+    <Dividend>
+      <Date>2022-06-30</Date>
+      <PayerIdentificationNumber>IE00BZ163G84</PayerIdentificationNumber>
+      <PayerName>Vanguard EUR Corporate Bond (Dist)</PayerName>
+      <PayerAddress>Europadamm 2-6, 41460 Neuss, Germany</PayerAddress>
+      <PayerCountry>Germany</PayerCountry>
+      <Type>1</Type>
+      <Value>1.49</Value>
+      <ForeignTax>0.0</ForeignTax>
+      <SourceCountry>Germany</SourceCountry>
+      <ReliefStatement>192/2006, 10. &#269;len</ReliefStatement>
+    </Dividend>
+    <Dividend>
+      <Date>2022-07-29</Date>
+      <PayerIdentificationNumber>IE00BZ163G84</PayerIdentificationNumber>
+      <PayerName>Vanguard EUR Corporate Bond (Dist)</PayerName>
+      <PayerAddress>Europadamm 2-6, 41460 Neuss, Germany</PayerAddress>
+      <PayerCountry>Germany</PayerCountry>
+      <Type>1</Type>
+      <Value>1.8</Value>
+      <ForeignTax>0.0</ForeignTax>
+      <SourceCountry>Germany</SourceCountry>
+      <ReliefStatement>192/2006, 10. &#269;len</ReliefStatement>
+    </Dividend>
+    <Dividend>
+      <Date>2022-09-02</Date>
+      <PayerIdentificationNumber>IE00BZ163G84</PayerIdentificationNumber>
+      <PayerName>Vanguard EUR Corporate Bond (Dist)</PayerName>
+      <PayerAddress>Europadamm 2-6, 41460 Neuss, Germany</PayerAddress>
+      <PayerCountry>Germany</PayerCountry>
+      <Type>1</Type>
+      <Value>2.76</Value>
+      <ForeignTax>0.0</ForeignTax>
+      <SourceCountry>Germany</SourceCountry>
+      <ReliefStatement>192/2006, 10. &#269;len</ReliefStatement>
+    </Dividend>
+    <Dividend>
+      <Date>2022-09-29</Date>
+      <PayerIdentificationNumber>IE00BZ163G84</PayerIdentificationNumber>
+      <PayerName>Vanguard EUR Corporate Bond (Dist)</PayerName>
+      <PayerAddress>Europadamm 2-6, 41460 Neuss, Germany</PayerAddress>
+      <PayerCountry>Germany</PayerCountry>
+      <Type>1</Type>
+      <Value>2.76</Value>
+      <ForeignTax>0.0</ForeignTax>
+      <SourceCountry>Germany</SourceCountry>
+      <ReliefStatement>192/2006, 10. &#269;len</ReliefStatement>
+    </Dividend>
+    <Dividend>
+      <Date>2022-02-03</Date>
+      <PayerIdentificationNumber>IE00BZ163M45</PayerIdentificationNumber>
+      <PayerName>Vanguard USD Treasury Bond (Dist)</PayerName>
+      <PayerAddress>Europadamm 2-6, 41460 Neuss, Germany</PayerAddress>
+      <PayerCountry>Germany</PayerCountry>
+      <Type>1</Type>
+      <Value>1.64</Value>
+      <ForeignTax>0.0</ForeignTax>
+      <SourceCountry>Germany</SourceCountry>
+      <ReliefStatement>192/2006, 10. &#269;len</ReliefStatement>
+    </Dividend>
+    <Dividend>
+      <Date>2022-03-04</Date>
+      <PayerIdentificationNumber>IE00BZ163M45</PayerIdentificationNumber>
+      <PayerName>Vanguard USD Treasury Bond (Dist)</PayerName>
+      <PayerAddress>Europadamm 2-6, 41460 Neuss, Germany</PayerAddress>
+      <PayerCountry>Germany</PayerCountry>
+      <Type>1</Type>
+      <Value>1.46</Value>
+      <ForeignTax>0.0</ForeignTax>
+      <SourceCountry>Germany</SourceCountry>
+      <ReliefStatement>192/2006, 10. &#269;len</ReliefStatement>
+    </Dividend>
+    <Dividend>
+      <Date>2022-03-31</Date>
+      <PayerIdentificationNumber>IE00BZ163M45</PayerIdentificationNumber>
+      <PayerName>Vanguard USD Treasury Bond (Dist)</PayerName>
+      <PayerAddress>Europadamm 2-6, 41460 Neuss, Germany</PayerAddress>
+      <PayerCountry>Germany</PayerCountry>
+      <Type>1</Type>
+      <Value>1.52</Value>
+      <ForeignTax>0.0</ForeignTax>
+      <SourceCountry>Germany</SourceCountry>
+      <ReliefStatement>192/2006, 10. &#269;len</ReliefStatement>
+    </Dividend>
+    <Dividend>
+      <Date>2022-04-29</Date>
+      <PayerIdentificationNumber>IE00BZ163M45</PayerIdentificationNumber>
+      <PayerName>Vanguard USD Treasury Bond (Dist)</PayerName>
+      <PayerAddress>Europadamm 2-6, 41460 Neuss, Germany</PayerAddress>
+      <PayerCountry>Germany</PayerCountry>
+      <Type>1</Type>
+      <Value>1.65</Value>
+      <ForeignTax>-0.0</ForeignTax>
+      <SourceCountry>Germany</SourceCountry>
+      <ReliefStatement>192/2006, 10. &#269;len</ReliefStatement>
+    </Dividend>
+    <Dividend>
+      <Date>2022-06-02</Date>
+      <PayerIdentificationNumber>IE00BZ163M45</PayerIdentificationNumber>
+      <PayerName>Vanguard USD Treasury Bond (Dist)</PayerName>
+      <PayerAddress>Europadamm 2-6, 41460 Neuss, Germany</PayerAddress>
+      <PayerCountry>Germany</PayerCountry>
+      <Type>1</Type>
+      <Value>2.24</Value>
+      <ForeignTax>0.0</ForeignTax>
+      <SourceCountry>Germany</SourceCountry>
+      <ReliefStatement>192/2006, 10. &#269;len</ReliefStatement>
+    </Dividend>
+    <Dividend>
+      <Date>2022-06-30</Date>
+      <PayerIdentificationNumber>IE00BZ163M45</PayerIdentificationNumber>
+      <PayerName>Vanguard USD Treasury Bond (Dist)</PayerName>
+      <PayerAddress>Europadamm 2-6, 41460 Neuss, Germany</PayerAddress>
+      <PayerCountry>Germany</PayerCountry>
+      <Type>1</Type>
+      <Value>2.12</Value>
+      <ForeignTax>0.0</ForeignTax>
+      <SourceCountry>Germany</SourceCountry>
+      <ReliefStatement>192/2006, 10. &#269;len</ReliefStatement>
+    </Dividend>
+    <Dividend>
+      <Date>2022-07-28</Date>
+      <PayerIdentificationNumber>IE00BZ163M45</PayerIdentificationNumber>
+      <PayerName>Vanguard USD Treasury Bond (Dist)</PayerName>
+      <PayerAddress>Europadamm 2-6, 41460 Neuss, Germany</PayerAddress>
+      <PayerCountry>Germany</PayerCountry>
+      <Type>1</Type>
+      <Value>2.37</Value>
+      <ForeignTax>0.0</ForeignTax>
+      <SourceCountry>Germany</SourceCountry>
+      <ReliefStatement>192/2006, 10. &#269;len</ReliefStatement>
+    </Dividend>
+    <Dividend>
+      <Date>2022-09-01</Date>
+      <PayerIdentificationNumber>IE00BZ163M45</PayerIdentificationNumber>
+      <PayerName>Vanguard USD Treasury Bond (Dist)</PayerName>
+      <PayerAddress>Europadamm 2-6, 41460 Neuss, Germany</PayerAddress>
+      <PayerCountry>Germany</PayerCountry>
+      <Type>1</Type>
+      <Value>4.0</Value>
+      <ForeignTax>0.0</ForeignTax>
+      <SourceCountry>Germany</SourceCountry>
+      <ReliefStatement>192/2006, 10. &#269;len</ReliefStatement>
+    </Dividend>
+    <Dividend>
+      <Date>2022-09-29</Date>
+      <PayerIdentificationNumber>IE00BZ163M45</PayerIdentificationNumber>
+      <PayerName>Vanguard USD Treasury Bond (Dist)</PayerName>
+      <PayerAddress>Europadamm 2-6, 41460 Neuss, Germany</PayerAddress>
+      <PayerCountry>Germany</PayerCountry>
+      <Type>1</Type>
+      <Value>3.37</Value>
+      <ForeignTax>0.0</ForeignTax>
+      <SourceCountry>Germany</SourceCountry>
+      <ReliefStatement>192/2006, 10. &#269;len</ReliefStatement>
+    </Dividend>
+    <Dividend>
+      <Date>2022-04-01</Date>
+      <PayerIdentificationNumber>IE00B7J7TB45</PayerIdentificationNumber>
+      <PayerName>iShares Global Corp Bond (Dist)</PayerName>
+      <PayerAddress>2 Ballsbridge Park, Ballsbridge, Dublin, D04 YW83</PayerAddress>
+      <PayerCountry>Ireland</PayerCountry>
+      <Type>1</Type>
+      <Value>25.56</Value>
+      <ForeignTax>0.0</ForeignTax>
+      <SourceCountry>Ireland</SourceCountry>
+      <ReliefStatement>96/2002, 10. &#269;len</ReliefStatement>
+    </Dividend>
+    <Dividend>
+      <Date>2022-09-30</Date>
+      <PayerIdentificationNumber>IE00B7J7TB45</PayerIdentificationNumber>
+      <PayerName>iShares Global Corp Bond (Dist)</PayerName>
+      <PayerAddress>2 Ballsbridge Park, Ballsbridge, Dublin, D04 YW83</PayerAddress>
+      <PayerCountry>Ireland</PayerCountry>
+      <Type>1</Type>
+      <Value>39.76</Value>
+      <ForeignTax>0.0</ForeignTax>
+      <SourceCountry>Ireland</SourceCountry>
+      <ReliefStatement>96/2002, 10. &#269;len</ReliefStatement>
+    </Dividend>
+  </body>
+</Envelope>
