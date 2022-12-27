@@ -13,7 +13,11 @@ class DividendReport(ReportModel):
 
     def create_report_by_ticker(self, ticker: str) -> pd.DataFrame:
         ticker_history = self.add_ticker_to_history_query(ticker=ticker)
-        return ticker_history.read()
+        ticker_history = ticker_history.read()
+        ticker_history.loc[:, "DATE"] = (
+            ticker_history.Time.astype("datetime64[ns]").apply(lambda x: x.date().strftime("%Y-%m-%d")).values
+        )
+        return ticker_history
 
 
 class FifoPositionReport(ReportModel):
