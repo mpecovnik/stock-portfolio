@@ -8,3 +8,4 @@ black
 isort
 pylint
 coverage
+click
