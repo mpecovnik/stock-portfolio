@@ -17,7 +17,13 @@ class DividendReport(ReportModel):
         ticker_history.loc[:, "DATE"] = (
             ticker_history.Time.astype("datetime64[ns]").apply(lambda x: x.date().strftime("%Y-%m-%d")).values
         )
-        return ticker_history
+        ticker_history.loc[:, "TAX_YEAR"] = ticker_history.DATE.astype("datetime64[ns]").apply(lambda x: x.year).values
+        report = ticker_history.query(f"TAX_YEAR in {self.years}")
+
+        report = report[["DATE", "Ticker", "Name", "ISIN", "Total (EUR)", "Withholding tax", "TAX_YEAR"]]
+        report = report.rename(columns={"Name": "NAME", "Ticker": "TICKER", "Total (EUR)": "TOTAL", "Withholding tax": "TAX"})
+
+        return report
 
 
 class FifoPositionReport(ReportModel):

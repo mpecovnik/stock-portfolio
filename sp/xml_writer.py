@@ -119,13 +119,13 @@ class DivDohXML(BaseModel):
         divident_item = SubElement(dividend_root, "Dividend")
         SubElement(divident_item, "Date").text = row.DATE
         SubElement(divident_item, "PayerIdentificationNumber").text = row.ISIN
-        SubElement(divident_item, "PayerName").text = row.Name
+        SubElement(divident_item, "PayerName").text = row.NAME
 
-        if "Vanguard" in row.Name:  # TODO
+        if "Vanguard" in row.NAME:  # TODO
             address = "Europadamm 2-6, 41460 Neuss, Germany"
             country = "Germany"
             statement = "192/2006, 10. člen"
-        elif "iShares" in row.Name:
+        elif "iShares" in row.NAME:
             address = "2 Ballsbridge Park, Ballsbridge, Dublin, D04 YW83"
             country = "Ireland"
             statement = "96/2002, 10. člen"
@@ -135,8 +135,8 @@ class DivDohXML(BaseModel):
         SubElement(divident_item, "PayerAddress").text = address
         SubElement(divident_item, "PayerCountry").text = country
         SubElement(divident_item, "Type").text = "1"
-        SubElement(divident_item, "Value").text = str(row["Total (EUR)"])
-        SubElement(divident_item, "ForeignTax").text = str(row["Withholding tax"])
+        SubElement(divident_item, "Value").text = str(row.TOTAL)
+        SubElement(divident_item, "ForeignTax").text = str(row.TAX)
         SubElement(divident_item, "SourceCountry").text = country
         SubElement(divident_item, "ReliefStatement").text = statement
 
