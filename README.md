@@ -53,7 +53,9 @@ Orodje pričakuje dva vhodna podatka:
 | Market buy | 2022-01-18 09:29:28 | LU0290357846 | DBXG     | Xtrackers II Eurozone Government Bond 25+ (Acc) |       0.3039    |          429.45 | EUR                        |         1       |        130.51 |               nan |                          nan |                   nan | nan           | EOF1752695169                        |                          nan    |
 | Market buy | 2022-01-18 09:29:35 | IE00BZ163G84 | VECP     | Vanguard EUR Corporate Bond (Dist)              |       1.26254   |           53.42 | EUR                        |         1       |         67.45 |               nan |                          nan |                   nan | nan           | EOF1752695177                        |                          nan    |
 
-Za generacijo XML poročila lahko uporabite CLI ukaz `sp div-doh xml-report --taxpayer-info <config-path> --data-path <data-path> --xml-path <xml-output-path>`, kjer je:
+Za generacijo XML poročila lahko uporabite CLI ukaz `sp div-doh xml-report --taxpayer-info <config-path> --data-path <data-path> --xml-path <xml-output-path> --create-csv`, kjer je:
 - `<config-path>` pot do JSONa z vašimi podatki,
 - `<data-path>` pot do mape z vašimi CSV podatki,
-- `<xml-path>` pot kamor se izvozi vaše poročilo,
+- `<xml-path>` pot kamor se izvozi vaše poročilo.
+
+V istem direktoriju kot je specificirana XML pot, se naredi tudi datoteka `report.csv`. Le-ta služi kot orodje za preverbo XML datoteke, saj je na podlagi te CSV datoteke zgeneriran XML.

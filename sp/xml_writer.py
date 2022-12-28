@@ -74,6 +74,7 @@ class DivDohXML(BaseModel):
     personal_info_path: Path
     input_path: Path
     output_path: Path
+    write_csv_report: Optional[bool] = True
 
     @property
     def personal_info(self) -> PersonalInfo:
@@ -101,7 +102,13 @@ class DivDohXML(BaseModel):
             history=DividendHistory(path=self.input_path),
         )
 
-        return div_report.create_report()
+        report = div_report.create_report()
+
+        if self.write_csv_report:
+            path = Path(self.output_path.root) / "report.csv"
+            report.to_csv(path_or_buf=path, index=False)
+
+        return report
 
     def create_doh_div_root(self, envelope: Element) -> Element:
         doh_div_root = SubElement(envelope, "body")
