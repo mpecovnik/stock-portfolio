@@ -105,7 +105,7 @@ class DivDohXML(BaseModel):
         report = div_report.create_report()
 
         if self.write_csv_report:
-            path = Path(self.output_path.root) / "report.csv"
+            path = self.output_path.parent / "report.csv"
             report.to_csv(path_or_buf=path, index=False)
 
         return report
