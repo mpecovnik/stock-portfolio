@@ -49,9 +49,9 @@ def check_existence(func: Callable[[R], pd.DataFrame]) -> Callable[[R], pd.DataF
 
 
 class HistoryModel(PathModel):
-    query: str | None = None
-    _columns: Iterable[str] | None = None
-    _actions: Iterable[str] | None = None
+    query: Optional[str] = None
+    _columns: Optional[Iterable[str]] = None
+    _actions: Optional[Iterable[str]] = None
 
     @property
     def columns(self) -> Iterable[str]:
@@ -93,7 +93,7 @@ class HistoryModel(PathModel):
 
 
 class ReportModel(BaseModel):
-    years: List[int] | None = None
+    years: Optional[List[int]] = None
     history: HistoryModel
     n_workers: Optional[int] = None
 
