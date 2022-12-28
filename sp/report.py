@@ -1,5 +1,5 @@
 from queue import Queue
-from typing import Dict, List
+from typing import Dict, List, Union
 
 import pandas as pd
 
@@ -76,7 +76,7 @@ class FifoPositionReport(ReportModel):
         sell_action = None
         buy_action = None
 
-        actions_dict: Dict[str, List[str | float]] = {
+        actions_dict: Dict[str, List[Union[str, float]]] = {
             "NUM_SHARES": [],
             "BUY_DATE": [],
             "BUY_PRICE_PER_SHARE": [],

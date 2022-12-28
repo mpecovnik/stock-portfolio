@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Optional
 
 import pytest
 
@@ -10,7 +11,7 @@ class Data(HistoryModel):
     def exists(self) -> bool:
         return True  # pragma: no cover
 
-    def read(self, query: str | None = None) -> str | None:
+    def read(self, query: Optional[str] = None) -> Optional[str]:
         return query  # pragma: no cover
 
 
