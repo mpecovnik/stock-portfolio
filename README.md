@@ -11,7 +11,7 @@ Orodje za generacijo XML poročila za direkten uvoz v `eDavki`. V tem trenutku j
 
 ## Inštalacija
 
-Pred uporabo je potrebno aplikacijo inštalirati. Na vašem sistemu je od prej potreben le Python. Podprti sta verziji `3.9.x` in `3.10.x`. Sledite spodnjim korakom:
+Pred uporabo je potrebno aplikacijo inštalirati. Na vašem sistemu je od prej potreben le Python. Podprti in stestirani sta verziji `3.9.x` in `3.10.x`. Sledite spodnjim korakom:
 1. (Opcijsko) Naredite virtual environment po vaši želji, da vam inštalacija ne pokvari morebitnih dependencyjev.
 2. (Opcijsko) Aktivirajte virtual environment.
 3. Z githuba potegnete repositorij z `git clone https://github.com/mpecovnik/stock-portfolio`,
