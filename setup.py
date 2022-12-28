@@ -30,4 +30,5 @@ setup(
     include_package_data=True,
     install_requires=parse_requirements("requirements.txt"),
     zip_safe=False,
+    entry_points={"console_scripts": ["sp=sp.cli:cli"]},
 )
